@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ItemCard } from './ItemCard';
+import { ItemGridCard } from './ItemGridCard';
 import { SearchAndFilter } from './SearchAndFilter';
 import { Item } from '../types/Item';
 
@@ -11,7 +11,6 @@ export const ItemList: React.FC<ItemListProps> = ({ items }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 
   // Get unique categories in alphabetical order
   const categories = useMemo(() => {
@@ -34,9 +33,6 @@ export const ItemList: React.FC<ItemListProps> = ({ items }) => {
     return filtered;
   }, [items, searchTerm, selectedCategory, sortOrder]);
 
-  const handleItemToggle = (itemId: string) => {
-    setExpandedItemId(expandedItemId === itemId ? null : itemId);
-  };
 
   return (
     <div className="space-y-6">
@@ -50,20 +46,18 @@ export const ItemList: React.FC<ItemListProps> = ({ items }) => {
         onSortOrderChange={setSortOrder}
       />
       
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {filteredItems.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="col-span-full text-center py-12">
             <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold text-gray-300 mb-2">No items found</h3>
             <p className="text-gray-500">Try adjusting your search terms or filters</p>
           </div>
         ) : (
           filteredItems.map(item => (
-            <ItemCard 
+            <ItemGridCard 
               key={item.id} 
-              item={item} 
-              isExpanded={expandedItemId === item.id}
-              onToggle={() => handleItemToggle(item.id)}
+              item={item}
             />
           ))
         )}
