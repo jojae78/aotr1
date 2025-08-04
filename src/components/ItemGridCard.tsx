@@ -47,8 +47,8 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
   };
 
   const renderItemIcon = (emoji: string, size: 'small' | 'large' = 'large') => {
-    const sizeClass = size === 'large' ? 'text-5xl' : 'text-2xl';
-    const containerSize = size === 'large' ? 'w-20 h-20' : 'w-8 h-8';
+    const sizeClass = size === 'large' ? 'text-4xl sm:text-5xl' : 'text-2xl';
+    const containerSize = size === 'large' ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-8 h-8';
     
     if (!emoji || typeof emoji !== 'string') {
       return <span className={sizeClass}>👹</span>;
@@ -76,48 +76,64 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
     return <span className={sizeClass}>{emoji}</span>;
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowModal(true);
+  };
+
+  const handleModalClose = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowModal(false);
+  };
+
+  const handleModalContentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   const taxInfo = getTaxDisplay(item);
 
   return (
     <>
       {/* Interactive Card */}
       <div 
-        onClick={() => setShowModal(true)}
-        className="bg-gray-900 rounded-xl border border-gray-700 hover:border-blue-500 transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20 h-full"
+        onClick={handleCardClick}
+        className="bg-gray-900 rounded-xl border border-gray-700 hover:border-blue-500 transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20 h-full"
       >
-        <div className="p-6 flex flex-col h-full">
+        <div className="p-4 sm:p-6 flex flex-col h-full">
           {/* Item Icon - Large and Centered */}
           <div className="text-center mb-4 flex-shrink-0">
-            <div className="flex justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+            <div className="flex justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
               {renderItemIcon(item.emoji)}
             </div>
           </div>
 
           {/* Item Name */}
           <div className="text-center mb-4 flex-shrink-0">
-            <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300 line-clamp-2 min-h-[3.5rem] flex items-center justify-center">
+            <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300 line-clamp-2 min-h-[3rem] flex items-center justify-center px-2">
               {item.name}
             </h3>
             <p className="text-sm text-gray-400 mt-1">{item.category}</p>
           </div>
 
           {/* Value - Most Prominent */}
-          <div className="text-center mb-6 flex-shrink-0">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300 shadow-lg">
-              <p className="text-3xl font-bold text-white">🔑 {item.value}</p>
+          <div className="text-center mb-4 sm:mb-6 flex-shrink-0">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-3 sm:p-4 group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300 shadow-lg">
+              <p className="text-2xl sm:text-3xl font-bold text-white">🔑 {item.value}</p>
               <p className="text-sm text-blue-100">Value</p>
             </div>
           </div>
 
           {/* Quick Stats Grid */}
-          <div className="grid grid-cols-2 gap-3 mb-4 flex-shrink-0">
-            <div className="bg-gray-800 rounded-lg p-3 text-center group-hover:bg-gray-750 transition-colors duration-300">
-              <p className={`text-lg font-bold ${getDemandColor(item.demand)}`}>
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 flex-shrink-0">
+            <div className="bg-gray-800 rounded-lg p-2 sm:p-3 text-center group-hover:bg-gray-750 transition-colors duration-300">
+              <p className={`text-base sm:text-lg font-bold ${getDemandColor(item.demand)}`}>
                 {item.demand}/10
               </p>
               <p className="text-xs text-gray-400">Demand</p>
             </div>
-            <div className="bg-gray-800 rounded-lg p-3 text-center group-hover:bg-gray-750 transition-colors duration-300">
+            <div className="bg-gray-800 rounded-lg p-2 sm:p-3 text-center group-hover:bg-gray-750 transition-colors duration-300">
               <div className="flex items-center justify-center space-x-1 mb-1">
                 {getRateIcon(item.rateOfChange)}
               </div>
@@ -127,7 +143,7 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
 
           {/* Status Badge */}
           <div className="text-center mb-4 flex-shrink-0">
-            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(item.status)}`}>
+            <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(item.status)}`}>
               {item.status}
             </span>
           </div>
@@ -144,41 +160,47 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
 
       {/* Detailed Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-gray-900 rounded-xl border border-gray-700 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 animate-fade-in"
+          onClick={handleModalClose}
+        >
+          <div 
+            className="bg-gray-900 rounded-xl border border-gray-700 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            onClick={handleModalContentClick}
+          >
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-6 flex items-center justify-between">
-              <div className="flex items-center space-x-4">
+            <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-4 sm:p-6 flex items-center justify-between z-10">
+              <div className="flex items-center space-x-3 sm:space-x-4">
                 {renderItemIcon(item.emoji, 'small')}
                 <div>
-                  <h3 className="text-2xl font-bold text-white">{item.name}</h3>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white">{item.name}</h3>
                   <p className="text-gray-400">{item.category}</p>
                 </div>
               </div>
               <button
-                onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
+                onClick={handleModalClose}
+                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg flex-shrink-0"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 space-y-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* Featured Value */}
               <div className="text-center">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 shadow-lg">
-                  <p className="text-4xl font-bold text-white mb-2">🔑 {item.value}</p>
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-4 sm:p-6 shadow-lg">
+                  <p className="text-3xl sm:text-4xl font-bold text-white mb-2">🔑 {item.value}</p>
                   <p className="text-blue-100">Current Market Value</p>
                 </div>
               </div>
 
               {/* Detailed Stats */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-800 rounded-lg p-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="bg-gray-800 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-400">🔸 Demand</span>
-                    <span className={`text-xl font-bold ${getDemandColor(item.demand)}`}>
+                    <span className="text-gray-400 text-sm">🔸 Demand</span>
+                    <span className={`text-lg sm:text-xl font-bold ${getDemandColor(item.demand)}`}>
                       {item.demand}/10
                     </span>
                   </div>
@@ -193,27 +215,27 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
                   </div>
                 </div>
                 
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-gray-800 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-400">📈 Rate</span>
+                    <span className="text-gray-400 text-sm">📈 Rate</span>
                     <div className="flex items-center space-x-1">
                       {getRateIcon(item.rateOfChange)}
-                      <span className="text-white font-bold">{item.rateOfChange}</span>
+                      <span className="text-white font-bold text-sm">{item.rateOfChange}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-gray-800 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400">🏅 Prestige</span>
-                    <span className="text-xl font-bold text-purple-400">{item.prestige}</span>
+                    <span className="text-gray-400 text-sm">🏅 Prestige</span>
+                    <span className="text-lg sm:text-xl font-bold text-purple-400">{item.prestige}</span>
                   </div>
                 </div>
                 
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-gray-800 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400">💸 Tax</span>
-                    <span className={`font-bold ${taxInfo.type === 'gem' ? 'text-purple-400' : 'text-yellow-400'}`}>
+                    <span className="text-gray-400 text-sm">💸 Tax</span>
+                    <span className={`font-bold text-sm ${taxInfo.type === 'gem' ? 'text-purple-400' : 'text-yellow-400'}`}>
                       {taxInfo.value > 0 ? `${taxInfo.emoji} ${taxInfo.value.toLocaleString()}` : 'None'}
                     </span>
                   </div>
@@ -222,7 +244,7 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
 
               {/* Status */}
               <div className="text-center">
-                <span className={`px-6 py-3 rounded-full text-sm font-bold border-2 ${getStatusColor(item.status)}`}>
+                <span className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm font-bold border-2 ${getStatusColor(item.status)}`}>
                   {item.status}
                 </span>
               </div>
@@ -232,7 +254,7 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
                 <div className="bg-gradient-to-r from-yellow-900 to-orange-900 rounded-lg p-4 border border-yellow-700">
                   <div className="flex items-center justify-between">
                     <span className="text-yellow-300 font-bold">🧪 Rarity</span>
-                    <span className="text-2xl font-bold text-yellow-400">{item.rarity}%</span>
+                    <span className="text-xl sm:text-2xl font-bold text-yellow-400">{item.rarity}%</span>
                   </div>
                   <div className="w-full bg-yellow-900 rounded-full h-2 mt-2">
                     <div 
@@ -249,7 +271,7 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
                   <span className="mr-2">📦</span>
                   How to Obtain
                 </h4>
-                <p className="text-white leading-relaxed">{item.obtainedFrom}</p>
+                <p className="text-white leading-relaxed text-sm sm:text-base">{item.obtainedFrom}</p>
               </div>
               
               {/* Trading Tips */}
