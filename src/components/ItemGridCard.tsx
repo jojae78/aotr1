@@ -92,6 +92,13 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
     e.stopPropagation();
   };
 
+  // Debug: Log when modal should show
+  React.useEffect(() => {
+    if (showModal) {
+      console.log('Modal should be showing for:', item.name);
+    }
+  }, [showModal, item.name]);
+
   const taxInfo = getTaxDisplay(item);
 
   return (
@@ -161,11 +168,12 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
       {/* Detailed Modal */}
       {showModal && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 animate-fade-in"
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
           onClick={handleModalClose}
+          style={{ zIndex: 9999 }}
         >
           <div 
-            className="bg-gray-900 rounded-xl border border-gray-700 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            className="bg-gray-900 rounded-xl border border-gray-700 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in"
             onClick={handleModalContentClick}
           >
             {/* Modal Header */}
