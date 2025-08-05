@@ -8,6 +8,8 @@ interface ItemGridCardProps {
 
 export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
   const [showModal, setShowModal] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const getDemandColor = (demand: number) => {
     if (demand <= 3) return 'text-red-400';
@@ -79,6 +81,19 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Get card position for modal positioning
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+      
+      setModalPosition({
+        x: rect.left + scrollLeft,
+        y: rect.top + scrollTop
+      });
+    }
+    
     setShowModal(true);
   };
 
@@ -105,6 +120,7 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
     <>
       {/* Interactive Card */}
       <div 
+        ref={cardRef}
         onClick={handleCardClick}
         className="bg-gray-900 rounded-xl border border-gray-700 hover:border-blue-500 transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20 h-full"
       >
@@ -168,13 +184,18 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
       {/* Detailed Modal */}
       {showModal && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black bg-opacity-75 z-50"
           onClick={handleModalClose}
           style={{ zIndex: 9999 }}
         >
           <div 
-            className="bg-gray-900 rounded-xl border border-gray-700 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in"
+            className="absolute bg-gray-900 rounded-xl border border-gray-700 w-80 sm:w-96 max-h-[80vh] overflow-y-auto shadow-2xl animate-fade-in"
             onClick={handleModalContentClick}
+            style={{
+              left: `${Math.min(modalPosition.x, window.innerWidth - 400)}px`,
+              top: `${Math.min(modalPosition.y, window.innerHeight - 600)}px`,
+              maxWidth: '90vw'
+            }}
           >
             {/* Modal Header */}
             <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-4 sm:p-6 flex items-center justify-between z-10">
