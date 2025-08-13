@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { TrendingUp, TrendingDown, Minus, Eye, X } from 'lucide-react';
 import { Item } from '../types/Item';
 
