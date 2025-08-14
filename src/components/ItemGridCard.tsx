@@ -169,7 +169,7 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-2 mb-3 flex-shrink-0">
+            <div className="grid grid-cols-2 gap-2 mb-3">
               <div className="bg-gray-800 rounded-lg p-2">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-gray-400 text-xs">🔸 Demand</span>
@@ -239,18 +239,18 @@ export const ItemGridCard: React.FC<ItemGridCardProps> = ({ item }) => {
             )}
             
             {/* How to Obtain - Scrollable */}
-            <div className="bg-gray-800 rounded-lg p-2 mb-3 flex-1 min-h-0">
+            <div className="bg-gray-800 rounded-lg p-2 mb-3 flex-grow">
               <h4 className="text-gray-400 font-bold mb-1 flex items-center text-xs">
                 <span className="mr-1">📦</span>
                 How to Obtain
               </h4>
-              <div className="overflow-y-auto max-h-16">
+              <div className="overflow-y-auto max-h-20">
                 <p className="text-white leading-tight text-xs">{item.obtainedFrom}</p>
               </div>
             </div>
             
             {/* Trading Tips */}
-            <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-lg p-2 border border-blue-700 mt-auto">
+            <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-lg p-2 border border-blue-700">
               <h4 className="text-blue-300 font-bold mb-1 flex items-center text-xs">
                 <span className="mr-1">💡</span>
                 Tips
